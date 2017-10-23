@@ -9,6 +9,6 @@ go install
 mkdir dist
 cd dist
 env GOOS=linux GOARCH=amd64 go build -v ../server.go
+tar -cf shortbox_backend.tar *
 cd ..
-tar -cf ./dist/shortbox_backend.tar ./dist/server
 echo 'Build done!'
