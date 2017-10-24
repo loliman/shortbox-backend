@@ -25,6 +25,8 @@ CREATE TABLE `Publisher` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `publisher`
+	ADD FULLTEXT INDEX `fulltext` (`name`);
 
 # Export von Tabelle Series
 # ------------------------------------------------------------
@@ -45,6 +47,8 @@ CREATE TABLE `Series` (
   CONSTRAINT `series_ibfk_1` FOREIGN KEY (`fk_publisher`) REFERENCES `Publisher` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `Series`
+	ADD FULLTEXT INDEX `fulltext` (`title`);
 
 # Export von Tabelle Issue
 # ------------------------------------------------------------
