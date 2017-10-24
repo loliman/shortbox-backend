@@ -4,6 +4,7 @@ echo ' Building shortbox-backend... '
 echo '------------------------------'
 cd $GOPATH/src/github.com/loliman/shortbox-backend
 rm -rf ./dist
+git pull
 go get
 go install
 mkdir dist
