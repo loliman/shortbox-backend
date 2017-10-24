@@ -553,8 +553,8 @@ func (p Publisher) MultiSelect(db *sql.Tx) ([]Publisher, int, error) {
 
 	var rows *sql.Rows
 	if p.Name != "" {
-		query += " WHERE name LIKE ? ORDER BY name"
-		rows, err = db.Query(query, "%"+p.Name+"%")
+		query += " WHERE name LIKE ? ORDER BY (CASE WHEN name LIKE ? THEN 2 ELSE (CASE WHEN name LIKE ? THEN 1 ELSE 0 END) END) DESC, MATCH (name) AGAINST (? IN BOOLEAN MODE) DESC, name"
+		rows, err = db.Query(query, "%"+p.Name+"%", p.Name, p.Name+"%", "\""+p.Name+"\"")
 	} else {
 		query += " ORDER BY name"
 		rows, err = db.Query(query)
@@ -640,8 +640,8 @@ func (s Series) MultiSelect(db *sql.Tx) ([]Series, int, error) {
 
 	var rows *sql.Rows
 	if s.Title != "" {
-		query += " WHERE s.title LIKE ? ORDER BY s.title, s.volume, s.fk_Publisher"
-		rows, err = db.Query(query, "%"+s.Title+"%")
+		query += " WHERE s.title LIKE ? ORDER BY (CASE WHEN title LIKE ? THEN 2 ELSE (CASE WHEN title LIKE ? THEN 1 ELSE 0 END) END) DESC, MATCH (title) AGAINST (? IN BOOLEAN MODE) DESC, s.title, s.volume, s.fk_Publisher"
+		rows, err = db.Query(query, "%"+s.Title+"%", s.Title, s.Title+"%", "\""+s.Title+"\"")
 	} else {
 		query += " ORDER BY s.title, s.volume, s.fk_Publisher"
 		rows, err = db.Query(query)
