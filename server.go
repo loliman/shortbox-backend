@@ -40,7 +40,7 @@ func main() {
 
 //Connect to the Database
 func setupDb() *sql.DB {
-	db, err := sql.Open("mysql", conf.DB_CREDENTIALS+"@/shortbox")
+	db, err := sql.Open("mysql", conf.DATASOURCE)
 
 	if err != nil {
 		log.Fatal("Failed to connect to database")
