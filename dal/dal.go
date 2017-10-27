@@ -103,7 +103,7 @@ func (l List) Select(db *sql.Tx) (List, error) {
 			if len(l.Search.Lists) > 1 {
 				l.Name = "Kombiniert"
 			} else {
-				l.Name = "Regal"
+				l.Name = "Archiv"
 			}
 		}
 
@@ -457,8 +457,6 @@ func (l List) Move(db *sql.Tx) (List, error) {
 
 	if l.Search.Lists[0] != 0 {
 		_, err = db.Exec("UPDATE Issue_List SET fk_list = ? where fk_list = ?", l.Search.Lists[0], l.Id)
-	} else {
-		_, err = db.Exec("UPDATE Issue SET amount = 0 WHERE id IN (SELECT fk_issue FROM Issue_List WHERE fk_list = ?)", l.Id)
 	}
 
 	if err != nil {
@@ -478,11 +476,6 @@ func (l List) MultiSelect(db *sql.Tx) ([]List, error) {
 
 	result := make([]List, 0)
 	var tl List
-	tl.Id = 0
-	tl.Name = "Regal"
-	tl.Type = "issue"
-
-	result = append(result, tl)
 
 	for rows.Next() {
 		err := rows.Scan(&tl.Id, &tl.Name, &tl.Sort, &tl.GroupBy)
@@ -908,12 +901,6 @@ func (i Issue) Select(db *sql.Tx) (Issue, error) {
 	i.Lists = make([]List, 0)
 
 	list := new(List)
-	if i.Amount > 0 {
-		list.Name = "Regal"
-		list.Id = 0
-		i.Lists = append(i.Lists, *list)
-	}
-
 	lists := make([]List, 0)
 	for rows.Next() {
 		list = new(List)
@@ -1034,11 +1021,7 @@ func (i Issue) Delete(db *sql.Tx) (Issue, error) {
 	//List Relations
 	for _, l := range issue.Lists {
 		if l.Id == i.Lists[0].Id {
-			if l.Id == 0 {
-				_, err = db.Exec("UPDATE Issue SET amount = 0 WHERE id = ?", i.Id)
-			} else {
-				_, err = db.Exec("DELETE FROM Issue_List WHERE fk_issue = ? AND fk_list = ?", i.Id, l.Id)
-			}
+			_, err = db.Exec("DELETE FROM Issue_List WHERE fk_issue = ? AND fk_list = ?", i.Id, l.Id)
 
 			if err != nil {
 				return issue, err
@@ -1046,7 +1029,14 @@ func (i Issue) Delete(db *sql.Tx) (Issue, error) {
 		}
 	}
 
-	if len(issue.Lists) > 1 {
+	archive := false
+	for _, l := range i.Lists {
+		if l.Id == 0 {
+			archive = true
+		}
+	}
+
+	if !archive {
 		return issue, err
 	}
 
@@ -1646,7 +1636,7 @@ func createStatement(count bool, s Search) (string, []interface{}) {
 
 	if s.OrgIssue {
 		query += " AND i.originalissue = 1"
-	} else {
+	} else if s.Lists[0] != 0 {
 		query += " AND ("
 		for idx, id := range s.Lists {
 			if idx != 0 {
@@ -1656,12 +1646,12 @@ func createStatement(count bool, s Search) (string, []interface{}) {
 			if id != 0 {
 				query += " l.id = ?"
 				args = append(args, id)
-			} else {
-				query += " i.amount > 0"
 			}
 		}
 
 		query += ")"
+	} else {
+		query += " AND i.originalissue = 0"
 	}
 
 	groupby := s.GOne
