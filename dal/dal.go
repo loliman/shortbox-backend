@@ -583,6 +583,7 @@ type Series struct {
 	Endyear   int64
 	Volume    int64
 	Issuecount int64
+	Original int64
 	Publisher Publisher
 }
 
@@ -590,12 +591,12 @@ func (s Series) Select(db *sql.Tx) (Series, error) {
 	var err error
 	if s.Id == 0 {
 		if s.Publisher.Name != "Original Publisher" {
-			err = db.QueryRow("SELECT id, title, startyear, endyear, volume, issuecount, fk_publisher FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", s.Title, s.Volume, s.Publisher.Id).Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Publisher.Id)
+			err = db.QueryRow("SELECT id, title, startyear, endyear, volume, issuecount, original, fk_publisher FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", s.Title, s.Volume, s.Publisher.Id).Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Original, &s.Publisher.Id)
 		} else {
-			err = db.QueryRow("SELECT id, title, startyear, endyear, volume, issuecount, fk_publisher FROM Series WHERE title = ? AND volume = ?", s.Title, s.Volume).Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Publisher.Id)
+			err = db.QueryRow("SELECT id, title, startyear, endyear, volume, issuecount, original, fk_publisher FROM Series WHERE title = ? AND volume = ?", s.Title, s.Volume).Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Original, &s.Publisher.Id)
 		}
 	} else {
-		err = db.QueryRow("SELECT id, title, startyear, endyear, volume, issuecount, fk_publisher FROM Series WHERE id = ?", s.Id).Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Publisher.Id)
+		err = db.QueryRow("SELECT id, title, startyear, endyear, volume, issuecount, original, fk_publisher FROM Series WHERE id = ?", s.Id).Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Original, &s.Publisher.Id)
 	}
 
 	if err != nil {
@@ -610,15 +611,26 @@ func (s Series) Select(db *sql.Tx) (Series, error) {
 func (s Series) MultiSelect(db *sql.Tx) ([]Series, int, error) {
 	series := make([]Series, 0)
 
-	query := "SELECT COUNT(*) FROM  Series s LEFT JOIN Publisher p ON s.fk_publisher = p.id"
+	query := "SELECT COUNT(*) FROM Series s LEFT JOIN Publisher p ON s.fk_publisher = p.id"
 
 	count := 0
 	var err error
 	if s.Title != "" {
 		query += " WHERE s.title LIKE ?"
-		err = db.QueryRow(query, "%"+s.Title+"%").Scan(&count)
+
+		if s.Original == 1 {
+			query += " AND s.original = ?"
+			err = db.QueryRow(query, "%"+s.Title+"%", s.Original).Scan(&count)
+		} else {
+			err = db.QueryRow(query, "%"+s.Title+"%").Scan(&count)
+		}
 	} else {
-		err = db.QueryRow(query).Scan(&count)
+		if s.Original == 1 {
+			query += " WHERE s.original = ?"
+			err = db.QueryRow(query, s.Original).Scan(&count)
+		} else {
+			err = db.QueryRow(query).Scan(&count)
+		}
 	}
 
 	if err != nil {
@@ -633,11 +645,31 @@ func (s Series) MultiSelect(db *sql.Tx) ([]Series, int, error) {
 
 	var rows *sql.Rows
 	if s.Title != "" {
-		query += " WHERE s.title LIKE ? ORDER BY (CASE WHEN title LIKE ? THEN 2 ELSE (CASE WHEN title LIKE ? THEN 1 ELSE 0 END) END) DESC, MATCH (title) AGAINST (? IN BOOLEAN MODE) DESC, s.title, s.volume, s.fk_Publisher"
-		rows, err = db.Query(query, "%"+s.Title+"%", s.Title, s.Title+"%", "\""+s.Title+"\"")
+		query += " WHERE s.title LIKE ?"
+
+		if s.Original == 1 {
+			query += " AND s.original = ?"
+		}
+
+		query += "  ORDER BY (CASE WHEN title LIKE ? THEN 2 ELSE (CASE WHEN title LIKE ? THEN 1 ELSE 0 END) END) DESC, MATCH (title) AGAINST (? IN BOOLEAN MODE) DESC, s.title, s.volume, s.fk_Publisher"
+
+		if s.Original == 1 {
+			rows, err = db.Query(query, "%"+s.Title+"%", s.Original, s.Title, s.Title+"%", "\""+s.Title+"\"")
+		} else {
+			rows, err = db.Query(query, "%"+s.Title+"%", s.Title, s.Title+"%", "\""+s.Title+"\"")
+		}
 	} else {
+		if s.Original == 1 {
+			query += " WHERE s.original = ?"
+		}
+
 		query += " ORDER BY s.title, s.volume, s.fk_Publisher"
-		rows, err = db.Query(query)
+
+		if s.Original == 1 {
+			rows, err = db.Query(query, s.Original)
+		} else {
+			rows, err = db.Query(query)
+		}
 	}
 
 	defer rows.Close()
@@ -647,7 +679,7 @@ func (s Series) MultiSelect(db *sql.Tx) ([]Series, int, error) {
 
 	for rows.Next() {
 		var s Series
-		if err := rows.Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Publisher.Id, &s.Publisher.Id, &s.Publisher.Name); err != nil {
+		if err := rows.Scan(&s.Id, &s.Title, &s.Startyear, &s.Endyear, &s.Volume, &s.Issuecount, &s.Original, &s.Publisher.Id, &s.Publisher.Id, &s.Publisher.Name); err != nil {
 			return series, 0, err
 		}
 		series = append(series, s)
@@ -679,7 +711,7 @@ func (s Series) Update(db *sql.Tx) (Series, error) {
 	}
 
 	//Series
-	_, err = db.Exec("UPDATE Series SET title = ?, startyear = ?, endyear = ?, volume = ?, issuecount = ?, fk_publisher = ? WHERE id = ?", s.Title, s.Startyear, s.Endyear, s.Volume, s.Issuecount, s.Publisher.Id, s.Id)
+	_, err = db.Exec("UPDATE Series SET title = ?, startyear = ?, endyear = ?, volume = ?, issuecount = ?, original = ?, fk_publisher = ? WHERE id = ?", s.Title, s.Startyear, s.Endyear, s.Volume, s.Issuecount, s.Original, s.Publisher.Id, s.Id)
 
 	return s, err
 }
@@ -748,7 +780,7 @@ func (i Issue) Insert(db *sql.Tx) (Issue, error) {
 	res, err = db.Exec("INSERT INTO Series (title, startyear, volume, fk_publisher) VALUES (?, ?, ?, ?)", i.Series.Title, i.Series.Startyear, i.Series.Volume, i.Series.Publisher.Id)
 
 	if err != nil {
-		err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", i.Series.Title, i.Series.Volume, i.Series.Publisher.Id).Scan(&i.Series.Id, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Publisher.Id)
+		err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", i.Series.Title, i.Series.Volume, i.Series.Publisher.Id).Scan(&i.Series.Id, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Original, &i.Series.Publisher.Id)
 	} else {
 		i.Series.Id, err = res.LastInsertId()
 	}
@@ -828,7 +860,7 @@ func (i Issue) Insert(db *sql.Tx) (Issue, error) {
 		res, err = db.Exec("INSERT INTO Series (title, startyear, volume, fk_publisher) VALUES (?, ?, ?, ?)", story.OriginalIssue.Series.Title, story.OriginalIssue.Series.Startyear, story.OriginalIssue.Series.Volume, story.OriginalIssue.Series.Publisher.Id)
 
 		if err != nil {
-			err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", story.OriginalIssue.Series.Title, story.OriginalIssue.Series.Volume, story.OriginalIssue.Series.Publisher.Id).Scan(&story.OriginalIssue.Series.Id, &story.OriginalIssue.Series.Title, &story.OriginalIssue.Series.Startyear, &story.OriginalIssue.Series.Endyear, &story.OriginalIssue.Series.Volume, &story.OriginalIssue.Series.Issuecount, &story.OriginalIssue.Series.Publisher.Id)
+			err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", story.OriginalIssue.Series.Title, story.OriginalIssue.Series.Volume, story.OriginalIssue.Series.Publisher.Id).Scan(&story.OriginalIssue.Series.Id, &story.OriginalIssue.Series.Title, &story.OriginalIssue.Series.Startyear, &story.OriginalIssue.Series.Endyear, &story.OriginalIssue.Series.Volume, &story.OriginalIssue.Series.Issuecount, &story.OriginalIssue.Series.Original, &story.OriginalIssue.Series.Publisher.Id)
 		} else {
 			story.OriginalIssue.Series.Id, err = res.LastInsertId()
 		}
@@ -877,7 +909,7 @@ func (i Issue) Select(db *sql.Tx) (Issue, error) {
 	}
 
 	//Series
-	err = db.QueryRow("SELECT * FROM Series WHERE id = ?", i.Series.Id).Scan(&i.Series.Id, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Publisher.Id)
+	err = db.QueryRow("SELECT * FROM Series WHERE id = ?", i.Series.Id).Scan(&i.Series.Id, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Original, &i.Series.Publisher.Id)
 
 	if err != nil {
 		return i, err
@@ -979,7 +1011,7 @@ func (i Issue) Select(db *sql.Tx) (Issue, error) {
 			}
 
 			//Series
-			err = db.QueryRow("SELECT * FROM Series WHERE id = ?", issue.Series.Id).Scan(&issue.Series.Id, &issue.Series.Title, &issue.Series.Startyear, &issue.Series.Endyear, &issue.Series.Volume, &issue.Series.Issuecount, &issue.Series.Publisher.Id)
+			err = db.QueryRow("SELECT * FROM Series WHERE id = ?", issue.Series.Id).Scan(&issue.Series.Id, &issue.Series.Title, &issue.Series.Startyear, &issue.Series.Endyear, &issue.Series.Volume, &issue.Series.Issuecount, &issue.Series.Original, &issue.Series.Publisher.Id)
 
 			if err != nil {
 				return i, err
@@ -1260,7 +1292,7 @@ func (i Issue) Update(db *sql.Tx) (Issue, error) {
 				}
 
 				//Series OI
-				res, err = db.Exec("INSERT INTO Series (title, startyear, volume, fk_publisher) VALUES (?, ?, ?, ?)", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Startyear, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Publisher.Id)
+				res, err = db.Exec("INSERT INTO Series (title, startyear, volume, fk_publisher) VALUES (?, ?, ?, ?)", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Startyear, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Original, newStory.OriginalIssue.Series.Publisher.Id)
 
 				if err != nil {
 					err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Publisher.Id).Scan(&newStory.OriginalIssue.Series.Id, &newStory.OriginalIssue.Series.Title, &newStory.OriginalIssue.Series.Startyear, &newStory.OriginalIssue.Series.Endyear, &newStory.OriginalIssue.Series.Volume, &newStory.OriginalIssue.Series.Issuecount, &newStory.OriginalIssue.Series.Publisher.Id)
@@ -1636,7 +1668,7 @@ func createStatement(count bool, s Search) (string, []interface{}) {
 
 	if s.OrgIssue {
 		query += " AND i.originalissue = 1"
-	} else if s.Lists[0] != 0 {
+	} else if len(s.Lists) > 0 && s.Lists[0] != 0 {
 		query += " AND ("
 		for idx, id := range s.Lists {
 			if idx != 0 {

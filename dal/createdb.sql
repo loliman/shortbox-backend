@@ -40,6 +40,7 @@ CREATE TABLE `Series` (
   `endyear` int(6) NOT NULL,
   `volume` int(6) NOT NULL,
   `issuecount` int(6) NOT NULL,
+  `original` int(1) NOT NULL,
   `fk_publisher` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `title` (`title`,`volume`,`fk_publisher`),
