@@ -1136,7 +1136,7 @@ func (i Issue) Update(db *sql.Tx) (Issue, error) {
 	res, err = db.Exec("INSERT INTO Series (title, startyear, volume, fk_publisher) VALUES (?, ?, ?, ?)", i.Series.Title, i.Series.Startyear, i.Series.Volume, i.Series.Publisher.Id)
 
 	if err != nil {
-		err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", i.Series.Title, i.Series.Volume, i.Series.Publisher.Id).Scan(&i.Series.Id, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Publisher.Id)
+		err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", i.Series.Title, i.Series.Volume, i.Series.Publisher.Id).Scan(&i.Series.Id, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Original, &i.Series.Publisher.Id)
 	} else {
 		i.Series.Id, err = res.LastInsertId()
 	}
@@ -1295,7 +1295,7 @@ func (i Issue) Update(db *sql.Tx) (Issue, error) {
 				res, err = db.Exec("INSERT INTO Series (title, startyear, volume, fk_publisher) VALUES (?, ?, ?, ?)", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Startyear, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Original, newStory.OriginalIssue.Series.Publisher.Id)
 
 				if err != nil {
-					err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Publisher.Id).Scan(&newStory.OriginalIssue.Series.Id, &newStory.OriginalIssue.Series.Title, &newStory.OriginalIssue.Series.Startyear, &newStory.OriginalIssue.Series.Endyear, &newStory.OriginalIssue.Series.Volume, &newStory.OriginalIssue.Series.Issuecount, &newStory.OriginalIssue.Series.Publisher.Id)
+					err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Publisher.Id).Scan(&newStory.OriginalIssue.Series.Id, &newStory.OriginalIssue.Series.Title, &newStory.OriginalIssue.Series.Startyear, &newStory.OriginalIssue.Series.Endyear, &newStory.OriginalIssue.Series.Volume, &newStory.OriginalIssue.Series.Issuecount, &newStory.OriginalIssue.Series.Original, &newStory.OriginalIssue.Series.Publisher.Id)
 				} else {
 					newStory.OriginalIssue.Series.Id, err = res.LastInsertId()
 				}

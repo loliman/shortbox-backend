@@ -386,6 +386,28 @@ func CrawlOi(conn *websocket.Conn, db *sql.Tx) (string) {
 				}
 			}
 
+			for idx, s := range stories {
+				var found = false
+
+				for _, s := range issue.Stories {
+					if int(s.Number) == idx+1 || s.Number == 0 {
+						found = true
+					}
+				}
+
+				if !found {
+					var story = new(dal.Story)
+
+					story.Title = s
+					story.Number = int64(idx+1)
+					story.OriginalIssue = issue
+
+					issue.Stories = append(issue.Stories, *story)
+				}
+			}
+
+			issue.Update(db)
+
 			if error {
 				failedIssues += "ISSUE;" + url + ";Stories\n"
 				continue
