@@ -27,100 +27,99 @@ func CrawlOi(conn *websocket.Conn, db *sql.Tx) (string) {
 
 	//Series
 	var series dal.Series
+	series.Original = 1
 	seriess, samount, err := series.MultiSelect(db)
 
 	for idx, s := range seriess {
-		if strings.Index(s.Publisher.Name, "Panini") != -1 {
-			url := s.Title + "_Vol_" + strconv.FormatInt(s.Volume, 10)
-			url = strings.Replace(url, " ", "_", -1)
-			url = strings.Replace(url, "?", "%3F", -1)
-			url = strings.Replace(url, "&", "%26", -1)
-			url =  "http://marvel.wikia.com/wiki/" + url
+		url := s.Title + "_Vol_" + strconv.FormatInt(s.Volume, 10)
+		url = strings.Replace(url, " ", "_", -1)
+		url = strings.Replace(url, "?", "%3F", -1)
+		url = strings.Replace(url, "&", "%26", -1)
+		url =  "http://marvel.wikia.com/wiki/" + url
 
-			//Send current item to shortbox
-			var rsp Response
-			rsp.Type = "INFO"
-			rsp.Message = ""
+		//Send current item to shortbox
+		var rsp Response
+		rsp.Type = "INFO"
+		rsp.Message = ""
 
-			item := new(dal.Message)
-			item.Type = "Series"
-			item.Message = s.Title + " (" + roman.Roman(int(s.Volume)) + ") (" + strconv.FormatInt(s.Startyear, 10) + ") "
-			item.Number = idx+1
-			item.Amount = samount
+		item := new(dal.Message)
+		item.Type = "Series"
+		item.Message = s.Title + " (" + roman.Roman(int(s.Volume)) + ") (" + strconv.FormatInt(s.Startyear, 10) + ") "
+		item.Number = idx+1
+		item.Amount = samount
 
-			rsp.Payload = item
+		rsp.Payload = item
 
-			conn.WriteJSON(rsp)
+		conn.WriteJSON(rsp)
 
-			doc, err := goquery.NewDocument(url)
-			if err != nil {
-				failedIssues += "SERIES;" + url + ";Invalid URL\n"
-				continue
-			}
+		doc, err := goquery.NewDocument(url)
+		if err != nil {
+			failedIssues += "SERIES;" + url + ";Invalid URL\n"
+			continue
+		}
 
-			issues := doc.Find(".wikia-gallery-item")
+		issues := doc.Find(".wikia-gallery-item")
 
-			if len(issues.Nodes) == 0 {
-				failedIssues += "SERIES;" + url + ";Not found (no Marvel Series?)\n"
-				continue
-			}
+		if len(issues.Nodes) == 0 {
+			failedIssues += "SERIES;" + url + ";Not found (no Marvel Series?)\n"
+			continue
+		}
 
-			s.Issuecount = int64(len(issues.Nodes))
+		s.Issuecount = int64(len(issues.Nodes))
 
-			//remove textless covers
-			//textlesscount := 0
-			textless := doc.Find(".gallery-image-wrapper")
+		//remove textless covers
+		//textlesscount := 0
+		textless := doc.Find(".gallery-image-wrapper")
 
-			for idx := range textless.Nodes {
-				for _, attr := range textless.Nodes[idx].Attr {
-					if attr.Key == "id" && (strings.Index(attr.Val, "Variant") != -1 || strings.Index(attr.Val, "Cover") != -1 || strings.Index(attr.Val, "Textless") != -1) {
-						s.Issuecount--
-					}
+		for idx := range textless.Nodes {
+			for _, attr := range textless.Nodes[idx].Attr {
+				if attr.Key == "id" && (strings.Index(attr.Val, "Variant") != -1 || strings.Index(attr.Val, "Cover") != -1 || strings.Index(attr.Val, "Textless") != -1) {
+					s.Issuecount--
 				}
 			}
+		}
 
-			msgBox := doc.Find("#messageBox")
+		msgBox := doc.Find("#messageBox")
 
-			text := msgBox.Text()
-			text = text[strings.Index(text, "("):]
-			text = text[:strings.Index(text, ".")]
+		text := msgBox.Text()
+		text = text[strings.Index(text, "("):]
+		text = text[:strings.Index(text, ".")]
 
-			if strings.Index(text, ")") == -1 {
+		if strings.Index(text, ")") == -1 {
+			failedIssues += "SERIES;" + url + ";No Year\n"
+			continue
+		}
+
+		yearstr := text[1:strings.Index(text, ")")]
+
+		if strings.Index(yearstr, "-") == -1 {
+			startyear, _ := strconv.ParseInt(yearstr, 10, 64)
+			if startyear == 0 {
 				failedIssues += "SERIES;" + url + ";No Year\n"
 				continue
 			}
-
-			yearstr := text[1:strings.Index(text, ")")]
-
-			if strings.Index(yearstr, "-") == -1 {
-				startyear, _ := strconv.ParseInt(yearstr, 10, 64)
-				if startyear == 0 {
-					failedIssues += "SERIES;" + url + ";No Year\n"
-					continue
-				}
-				s.Startyear = startyear
-				s.Endyear = 0
-			} else {
-				s.Startyear, _ = strconv.ParseInt(yearstr[:strings.Index(yearstr, "-")], 10, 64)
-				s.Endyear, _ = strconv.ParseInt(yearstr[strings.Index(yearstr, "-")+1:], 10, 64)
-			}
-
-			if s.Endyear == 0 {
-				text = strings.Replace(text, "(" + strconv.FormatInt(s.Startyear, 10) + ")", "", 1)
-			} else {
-				text = strings.Replace(text, "(" + strconv.FormatInt(s.Startyear, 10) + "-" + strconv.FormatInt(s.Endyear, 10) + ")", "", 1)
-			}
-
-			if text != "" && strings.Index(text, "published by") != -1 {
-				text = strings.Replace(text, "(published by ", "", 1)
-				text = strings.Replace(text, ")", "", 1)
-				s.Publisher.Name = strings.TrimSpace(text)
-			} else {
-				failedIssues += "SERIES;" + url + ";No Publisher\n"
-			}
-
-			s.Update(db)
+			s.Startyear = startyear
+			s.Endyear = 0
+		} else {
+			s.Startyear, _ = strconv.ParseInt(yearstr[:strings.Index(yearstr, "-")], 10, 64)
+			s.Endyear, _ = strconv.ParseInt(yearstr[strings.Index(yearstr, "-")+1:], 10, 64)
 		}
+
+		if s.Endyear == 0 {
+			text = strings.Replace(text, "(" + strconv.FormatInt(s.Startyear, 10) + ")", "", 1)
+		} else {
+			text = strings.Replace(text, "(" + strconv.FormatInt(s.Startyear, 10) + "-" + strconv.FormatInt(s.Endyear, 10) + ")", "", 1)
+		}
+
+		if text != "" && strings.Index(text, "published by") != -1 {
+			text = strings.Replace(text, "(published by ", "", 1)
+			text = strings.Replace(text, ")", "", 1)
+			s.Publisher.Name = strings.TrimSpace(text)
+		} else {
+			failedIssues += "SERIES;" + url + ";No Publisher\n"
+		}
+
+		s.Update(db)
 	}
 
 	//Issues
