@@ -1115,10 +1115,6 @@ func (i Issue) Delete(db *sql.Tx) (Issue, error) {
 func (i Issue) Update(db *sql.Tx) (Issue, error) {
 	old, err := i.Select(db)
 
-	//Try to delete Series and Publisher, ignore error because of foreign key exception
-	db.Exec("DELETE FROM Series WHERE id = ?", i.Series.Id)
-	db.Exec("DELETE FROM Publisher WHERE id = ?", i.Series.Publisher.Id)
-
 	//Publisher
 	res, err := db.Exec("INSERT INTO Publisher (name) VALUES (?)", i.Series.Publisher.Name)
 
@@ -1151,6 +1147,10 @@ func (i Issue) Update(db *sql.Tx) (Issue, error) {
 	if err != nil {
 		return i, err
 	}
+
+	//Try to delete Series and Publisher, ignore error because of foreign key exception
+	db.Exec("DELETE FROM Series WHERE id = ?", old.Series.Id)
+	db.Exec("DELETE FROM Publisher WHERE id = ?", old.Series.Publisher.Id)
 
 	//Lists
 	for _, oldList := range old.Lists {
