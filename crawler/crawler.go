@@ -562,7 +562,7 @@ func ExtractComicHuntersMetadata(doc *goquery.Document, id int64) (dal.Issue) {
 
 		if lastString != "" {
 			s = lastString + "," + s
-			lastString = ""
+			lastString = x""
 		}*/
 
 		issues := make([]dal.Story, 0)
@@ -723,7 +723,7 @@ func getIssues(s string, i *dal.Issue, lastIn dal.Story) ([]dal.Story) {
 				issues = append(issues, issue)
 			}
 		}
-	} /*II)*/ else if roman.IsRoman(string(reversedString[0])) && strings.Count(s, "(") >= 2 {
+	} /*II)*/ else if roman.IsRoman(string(reversedString[0])) {
 		var language = "Deutsch"
 		if i != nil {
 			language = i.Language
@@ -785,6 +785,7 @@ func createIssue(name string, lastIn dal.Story, number string) (dal.Story) {
 
 	if strings.TrimSpace(issue.OriginalIssue.Title) == "" {
 		issue.OriginalIssue.Title = lastIn.OriginalIssue.Title
+		issue.OriginalIssue.Series.Title = lastIn.OriginalIssue.Series.Title
 		changedName = true
 	}
 
@@ -953,13 +954,13 @@ func getSubNumberIssues(reversedString string, title string, lang string, lastIn
 			}
 
 			for _, i := range temp {
-				i.Number = int64(roman.Arabic(lastIssue))
+				i.Number = int64(roman.Arabic(reverse(lastIssue)))
 				newIssues = append(newIssues, i)
 			}
 		} else {
 			issue := createIssue(lastIn.Title, lastIn, lastIn.OriginalIssue.Number)
 
-			issue.Number, _ = strconv.ParseInt(lastIssue, 10, 64)
+			issue.Number = int64(roman.Arabic(reverse(lastIssue)))
 
 			newIssues = append(newIssues, issue)
 		}
