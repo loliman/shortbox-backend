@@ -1292,7 +1292,7 @@ func (i Issue) Update(db *sql.Tx) (Issue, error) {
 				}
 
 				//Series OI
-				res, err = db.Exec("INSERT INTO Series (title, startyear, volume, fk_publisher) VALUES (?, ?, ?, ?)", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Startyear, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Original, newStory.OriginalIssue.Series.Publisher.Id)
+				res, err = db.Exec("INSERT INTO Series (title, startyear, volume, original, fk_publisher) VALUES (?, ?, ?, ?, ?)", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Startyear, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Original, newStory.OriginalIssue.Series.Publisher.Id)
 
 				if err != nil {
 					err = db.QueryRow("SELECT * FROM Series WHERE title = ? AND volume = ? AND fk_publisher = ?", newStory.OriginalIssue.Series.Title, newStory.OriginalIssue.Series.Volume, newStory.OriginalIssue.Series.Publisher.Id).Scan(&newStory.OriginalIssue.Series.Id, &newStory.OriginalIssue.Series.Title, &newStory.OriginalIssue.Series.Startyear, &newStory.OriginalIssue.Series.Endyear, &newStory.OriginalIssue.Series.Volume, &newStory.OriginalIssue.Series.Issuecount, &newStory.OriginalIssue.Series.Original, &newStory.OriginalIssue.Series.Publisher.Id)
