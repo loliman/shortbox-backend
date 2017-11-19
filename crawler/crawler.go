@@ -115,8 +115,6 @@ func CrawlOi(conn *websocket.Conn, db *sql.Tx) (string) {
 			text = strings.Replace(text, "(published by ", "", 1)
 			text = strings.Replace(text, ")", "", 1)
 			s.Publisher.Name = strings.TrimSpace(text)
-		} else {
-			failedIssues += "SERIES;" + url + ";No Publisher\n"
 		}
 
 		s.Update(db)
