@@ -184,7 +184,12 @@ func createMux(db *sql.DB) http.Handler {
 			price := strconv.FormatFloat(i.Price.Price, 'f', 2, 64)
 			price += " " + i.Price.Currency
 
-			result += i.Title + ";=\"" + number + "\";" + i.Series.Title + " (" + syear + ");" + i.Series.Publisher.Name + ";" + i.Format + ";" + i.Language + ";=\"" + pages + "\";" + i.Releasedate + ";=\"" + price + "\"\n"
+			format := i.Format.Format
+			if i.Format.Variant != "" {
+				format += " (Variant Cover " + i.Format.Variant + ")"
+			}
+
+			result += i.Title + ";=\"" + number + "\";" + i.Series.Title + " (" + syear + ");" + i.Series.Publisher.Name + ";" + format + ";" + i.Language + ";=\"" + pages + "\";" + i.Releasedate + ";=\"" + price + "\"\n"
 		}
 
 		finalize(tx, encoder, result)

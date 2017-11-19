@@ -62,6 +62,7 @@ CREATE TABLE `Issue` (
   `fk_series` int(11) unsigned,
   `number` varchar(255) NOT NULL,
   `format` varchar(255) DEFAULT NULL,
+  `variant` varchar(255) NOT NULL,
   `language` varchar(255) DEFAULT NULL,
   `pages` int(11) DEFAULT NULL,
   `releasedate` date DEFAULT NULL,
@@ -75,7 +76,7 @@ CREATE TABLE `Issue` (
   `originalissue` int(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_series` (`fk_series`),
-  UNIQUE KEY `number` (`number`,`fk_series`,`format`),
+  UNIQUE KEY `number` (`number`,`fk_series`,`format`, `variant`),
   CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`fk_series`) REFERENCES `Series` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

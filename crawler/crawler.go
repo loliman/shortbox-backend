@@ -215,7 +215,7 @@ func CrawlOi(conn *websocket.Conn, db *sql.Tx) (string) {
 			infobox := doc.Find(".infobox")
 
 			issue.Language = "English"
-			issue.Format = "Heft"
+			issue.Format.Format = "Heft"
 
 			image := infobox.Find(".image-thumbnail")
 
@@ -478,9 +478,9 @@ func ExtractComicHuntersMetadata(doc *goquery.Document, id int64) (dal.Issue) {
 	i.Series = s
 
 	if metadata.Nodes[10].FirstChild == nil {
-		i.Format = ""
+		i.Format.Format = ""
 	} else {
-		i.Format = metadata.Nodes[10].FirstChild.Data
+		i.Format.Format = metadata.Nodes[10].FirstChild.Data
 	}
 
 	if metadata.Nodes[9].FirstChild == nil {
@@ -615,7 +615,7 @@ func ExtractPaniniMetadata(doc *goquery.Document) (dal.Issue) {
 
 	content := doc.Find(".content")
 
-	i.Format = content.Nodes[1].FirstChild.Data
+	i.Format.Format = content.Nodes[1].FirstChild.Data
 	i.Language = "Deutsch"
 	pages, _ := strconv.ParseInt(content.Nodes[2].FirstChild.Data, 10, 64)
 	i.Pages = int(pages)

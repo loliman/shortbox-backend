@@ -742,6 +742,11 @@ type Price struct {
 	Currency string
 }
 
+type Format struct {
+	Format  string
+	Variant string
+}
+
 type Issue struct {
 	Id                int64
 	Title             string
@@ -749,7 +754,7 @@ type Issue struct {
 	Number            string
 	Stories           []Story
 	Lists             []List
-	Format            string
+	Format			  Format
 	Language          string
 	Pages             int
 	Releasedate       string
@@ -790,7 +795,7 @@ func (i Issue) Insert(db *sql.Tx) (Issue, error) {
 	}
 
 	//Issue
-	res, err = db.Exec("INSERT INTO Issue (title, fk_series, number, format, language, pages, releasedate, price, currency, coverurl, quality, qualityAdditional, amount, isread, originalissue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", i.Title, i.Series.Id, i.Number, i.Format, i.Language, i.Pages, i.Releasedate, i.Price.Price, i.Price.Currency, i.Coverurl, i.Quality, i.QualityAdditional, i.Amount, i.Read, i.Originalissue)
+	res, err = db.Exec("INSERT INTO Issue (title, fk_series, number, format, variant, language, pages, releasedate, price, currency, coverurl, quality, qualityAdditional, amount, isread, originalissue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", i.Title, i.Series.Id, i.Number, i.Format.Format, i.Format.Variant, i.Language, i.Pages, i.Releasedate, i.Price.Price, i.Price.Currency, i.Coverurl, i.Quality, i.QualityAdditional, i.Amount, i.Read, i.Originalissue)
 
 	if err != nil {
 		itoadd, err := i.Select(db)
@@ -870,10 +875,10 @@ func (i Issue) Insert(db *sql.Tx) (Issue, error) {
 		}
 
 		//Issue OI
-		res, err = db.Exec("INSERT INTO Issue (title, fk_series, number, format, language, pages, releasedate, price, currency, coverurl, quality, qualityAdditional, amount, isread, originalissue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", story.OriginalIssue.Title, story.OriginalIssue.Series.Id, story.OriginalIssue.Number, story.OriginalIssue.Format, story.OriginalIssue.Language, story.OriginalIssue.Pages, story.OriginalIssue.Releasedate, story.OriginalIssue.Price.Price, story.OriginalIssue.Price.Currency, story.OriginalIssue.Coverurl, story.OriginalIssue.Quality, story.OriginalIssue.QualityAdditional, story.OriginalIssue.Amount, story.OriginalIssue.Read, story.OriginalIssue.Originalissue)
+		res, err = db.Exec("INSERT INTO Issue (title, fk_series, number, format, language, pages, releasedate, price, currency, coverurl, quality, qualityAdditional, amount, isread, originalissue) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", story.OriginalIssue.Title, story.OriginalIssue.Series.Id, story.OriginalIssue.Number, story.OriginalIssue.Format.Format, story.OriginalIssue.Language, story.OriginalIssue.Pages, story.OriginalIssue.Releasedate, story.OriginalIssue.Price.Price, story.OriginalIssue.Price.Currency, story.OriginalIssue.Coverurl, story.OriginalIssue.Quality, story.OriginalIssue.QualityAdditional, story.OriginalIssue.Amount, story.OriginalIssue.Read, story.OriginalIssue.Originalissue)
 
 		if err != nil {
-			err = db.QueryRow("SELECT * FROM Issue WHERE fk_series = ? AND number = ?", story.OriginalIssue.Series.Id, story.OriginalIssue.Number).Scan(&story.OriginalIssue.Id, &story.OriginalIssue.Title, &story.OriginalIssue.Series.Id, &story.OriginalIssue.Number, &story.OriginalIssue.Format, &story.OriginalIssue.Language, &story.OriginalIssue.Pages, &story.OriginalIssue.Releasedate, &story.OriginalIssue.Price.Price, &story.OriginalIssue.Price.Currency, &story.OriginalIssue.Coverurl, &story.OriginalIssue.Quality, &story.OriginalIssue.QualityAdditional, &story.OriginalIssue.Amount, &story.OriginalIssue.Read, &story.OriginalIssue.Originalissue)
+			err = db.QueryRow("SELECT * FROM Issue WHERE fk_series = ? AND number = ?", story.OriginalIssue.Series.Id, story.OriginalIssue.Number).Scan(&story.OriginalIssue.Id, &story.OriginalIssue.Title, &story.OriginalIssue.Series.Id, &story.OriginalIssue.Number, &story.OriginalIssue.Format.Format, &story.OriginalIssue.Language, &story.OriginalIssue.Pages, &story.OriginalIssue.Releasedate, &story.OriginalIssue.Price.Price, &story.OriginalIssue.Price.Currency, &story.OriginalIssue.Coverurl, &story.OriginalIssue.Quality, &story.OriginalIssue.QualityAdditional, &story.OriginalIssue.Amount, &story.OriginalIssue.Read, &story.OriginalIssue.Originalissue)
 
 			if err != nil {
 				return i, err
@@ -899,9 +904,9 @@ func (i Issue) Select(db *sql.Tx) (Issue, error) {
 
 	//Issue
 	if i.Id == 0 {
-		err = db.QueryRow("SELECT * FROM Issue WHERE title = ? AND fk_series = ? AND number = ?", i.Title, i.Series.Id, i.Number).Scan(&i.Id, &i.Title, &i.Series.Id, &i.Number, &i.Format, &i.Language, &i.Pages, &i.Releasedate, &i.Price.Price, &i.Price.Currency, &i.Coverurl, &i.Quality, &i.QualityAdditional, &i.Amount, &i.Read, &i.Originalissue)
+		err = db.QueryRow("SELECT * FROM Issue WHERE title = ? AND fk_series = ? AND number = ?", i.Title, i.Series.Id, i.Number).Scan(&i.Id, &i.Title, &i.Series.Id, &i.Number, &i.Format.Format, &i.Format.Variant, &i.Language, &i.Pages, &i.Releasedate, &i.Price.Price, &i.Price.Currency, &i.Coverurl, &i.Quality, &i.QualityAdditional, &i.Amount, &i.Read, &i.Originalissue)
 	} else {
-		err = db.QueryRow("SELECT * FROM Issue WHERE id = ?", i.Id).Scan(&i.Id, &i.Title, &i.Series.Id, &i.Number, &i.Format, &i.Language, &i.Pages, &i.Releasedate, &i.Price.Price, &i.Price.Currency, &i.Coverurl, &i.Quality, &i.QualityAdditional, &i.Amount, &i.Read, &i.Originalissue)
+		err = db.QueryRow("SELECT * FROM Issue WHERE id = ?", i.Id).Scan(&i.Id, &i.Title, &i.Series.Id, &i.Number, &i.Format.Format, &i.Format.Variant, &i.Language, &i.Pages, &i.Releasedate, &i.Price.Price, &i.Price.Currency, &i.Coverurl, &i.Quality, &i.QualityAdditional, &i.Amount, &i.Read, &i.Originalissue)
 	}
 
 	if err != nil {
@@ -1004,7 +1009,7 @@ func (i Issue) Select(db *sql.Tx) (Issue, error) {
 
 		for _, issue := range issues {
 			//Issue
-			err = db.QueryRow("SELECT * FROM Issue WHERE id = ?", issue.Id).Scan(&issue.Id, &issue.Title, &issue.Series.Id, &issue.Number, &issue.Format, &issue.Language, &issue.Pages, &issue.Releasedate, &issue.Price.Price, &issue.Price.Currency, &issue.Coverurl, &issue.Quality, &issue.QualityAdditional, &issue.Amount, &issue.Read, &issue.Originalissue)
+			err = db.QueryRow("SELECT * FROM Issue WHERE id = ?", issue.Id).Scan(&issue.Id, &issue.Title, &issue.Series.Id, &issue.Number, &issue.Format.Format, &issue.Format.Variant, &issue.Language, &issue.Pages, &issue.Releasedate, &issue.Price.Price, &issue.Price.Currency, &issue.Coverurl, &issue.Quality, &issue.QualityAdditional, &issue.Amount, &issue.Read, &issue.Originalissue)
 
 			if err != nil {
 				return i, err
@@ -1142,7 +1147,7 @@ func (i Issue) Update(db *sql.Tx) (Issue, error) {
 	}
 
 	//Issue
-	_, err = db.Exec("UPDATE Issue SET title = ?, fk_series = ?, number = ?, format = ?, language = ?, pages = ?, releasedate = ?, price = ?, currency = ?, coverurl = ?, quality = ?, qualityAdditional = ?, amount = ?, isread = ?, originalissue = ? WHERE id = ?", i.Title, i.Series.Id, i.Number, i.Format, i.Language, i.Pages, i.Releasedate, i.Price.Price, i.Price.Currency, i.Coverurl, i.Quality, i.QualityAdditional, i.Amount, i.Read, i.Originalissue, i.Id)
+	_, err = db.Exec("UPDATE Issue SET title = ?, fk_series = ?, number = ?, format = ?, variant = ?, language = ?, pages = ?, releasedate = ?, price = ?, currency = ?, coverurl = ?, quality = ?, qualityAdditional = ?, amount = ?, isread = ?, originalissue = ? WHERE id = ?", i.Title, i.Series.Id, i.Number, i.Format.Format, i.Format.Variant, i.Language, i.Pages, i.Releasedate, i.Price.Price, i.Price.Currency, i.Coverurl, i.Quality, i.QualityAdditional, i.Amount, i.Read, i.Originalissue, i.Id)
 
 	if err != nil {
 		return i, err
@@ -1372,7 +1377,7 @@ func (i Issue) MultiSelect(db *sql.Tx, s Search) ([]Issue, int, error) {
 		var storyCountMax int
 		var storyCountMin int
 		var i Issue
-		if err := rows.Scan(&i.Id, &i.Title, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Publisher.Name, &i.Number, &i.Language, &i.Releasedate, &i.Amount, &i.Format, &i.Price.Price, &i.Price.Currency, &i.Pages, &i.Originalissue, &i.Read, &i.Coverurl, &i.Quality, &i.QualityAdditional, &storyCountMax, &storyCountMin); err != nil {
+		if err := rows.Scan(&i.Id, &i.Title, &i.Series.Title, &i.Series.Startyear, &i.Series.Endyear, &i.Series.Volume, &i.Series.Issuecount, &i.Series.Publisher.Name, &i.Number, &i.Language, &i.Releasedate, &i.Amount, &i.Format.Format, &i.Format.Variant, &i.Price.Price, &i.Price.Currency, &i.Pages, &i.Originalissue, &i.Read, &i.Coverurl, &i.Quality, &i.QualityAdditional, &storyCountMax, &storyCountMin); err != nil {
 			return issues, 0, err
 		}
 		issues = append(issues, i)
@@ -1403,7 +1408,7 @@ func createStatement(count bool, s Search) (string, []interface{}) {
 	if count {
 		query += "SELECT COUNT(*) AS count"
 	} else {
-		query += "SELECT i.id, i.title, s.title AS stitle, s.startyear, s.endyear, s.volume, s.issuecount, p.name, i.number, i.language, i.releasedate, i.amount, i.format, i.price, i.currency, i.pages, i.originalissue, i.isread, i.coverurl, i.quality, i.qualityAdditional"
+		query += "SELECT i.id, i.title, s.title AS stitle, s.startyear, s.endyear, s.volume, s.issuecount, p.name, i.number, i.language, i.releasedate, i.amount, i.format, i.variant, i.price, i.currency, i.pages, i.originalissue, i.isread, i.coverurl, i.quality, i.qualityAdditional"
 	}
 
 	if s.SDuplicateIn != "BO" {
@@ -1531,9 +1536,9 @@ func createStatement(count bool, s Search) (string, []interface{}) {
 		args = append(args, "%"+s.Issue.Series.Publisher.Name+"%")
 	}
 
-	if s.Issue.Format != "" {
+	if s.Issue.Format.Format != "" {
 		query += " AND i.format like ?"
-		args = append(args, "%"+s.Issue.Format+"%")
+		args = append(args, "%"+s.Issue.Format.Format+"%")
 	}
 
 	if s.Issue.Pages != 0 {
