@@ -176,9 +176,6 @@ func createMux(db *sql.DB) http.Handler {
 		for _, it := range res.Objects {
 			var i dal.Issue = it.(dal.Issue)
 			number := i.Number
-			if number[len(number)-1:] == "0" {
-				number = number[0:len(number)-2]
-			}
 			syear := strconv.FormatInt(i.Series.Startyear, 10)
 			if syear[len(syear)-1:] == "0" {
 				syear = syear[0:len(syear)-2]
