@@ -314,7 +314,15 @@ func (is Issue) Convert(i interface {}) (Issue) {
 	}
 
 	if m["Format"] != nil {
-		is.Format = m["Format"].(string)
+		format := m["Format"].(map[string]interface {})
+
+		if format["Format"] != nil {
+			is.Format.Format = format["Format"].(string)
+		}
+
+		if format["Variant"] != nil {
+			is.Format.Variant = format["Variant"].(string)
+		}
 	}
 
 	if m["Quality"] != nil {
