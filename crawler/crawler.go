@@ -456,10 +456,8 @@ func ExtractComicHuntersMetadata(doc *goquery.Document, id int64) (dal.Issue) {
 	if sortNumber != "0" && strings.HasPrefix(sortNumber, "Classic") {
 		sortNumber = strings.Replace(sortNumber, "Classic ", "", 1)
 		i.Number = strconv.FormatInt(int64(roman.Arabic(sortNumber)), 10)
-	} else if sortNumber != "0" {
-		i.Number = sortNumber
 	} else {
-		sortNumber = "0"
+		i.Number = sortNumber
 	}
 
 	var s dal.Series
