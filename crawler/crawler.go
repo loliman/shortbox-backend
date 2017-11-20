@@ -447,7 +447,7 @@ func ExtractComicHuntersMetadata(doc *goquery.Document, id int64) (dal.Issue) {
 	metadata := doc.Find(".comicfont")
 
 	var sortNumber string
-	if len(metadata.Nodes) == 0 {
+	if len(metadata.Nodes) == 0 || metadata.Nodes[0].FirstChild == nil {
 		sortNumber = "0"
 	} else {
 		sortNumber = metadata.Nodes[0].FirstChild.Data
