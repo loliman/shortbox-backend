@@ -563,6 +563,8 @@ func ExtractComicHuntersMetadata(doc *goquery.Document, id int64) (dal.Issue) {
 				i.Stories = append(i.Stories, is)
 			}
 		}
+	} else {
+		i.Stories = make([]dal.Story, 0)
 	}
 
 	images := doc.Find("img").Nodes
