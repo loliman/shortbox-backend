@@ -537,45 +537,31 @@ func ExtractComicHuntersMetadata(doc *goquery.Document, id int64) (dal.Issue) {
 	if metadata.Nodes[1].FirstChild != nil {
 		originalTitle = metadata.Nodes[1].FirstChild.Data
 	}
-	originalTitle = fixOriginalTitle(originalTitle, i.Title)
-	trimedTitle := trimTitle(originalTitle)
 
-	splittedTrimedTitle := splitTrimedTitle(trimedTitle)
+	if originalTitle != "" {
+		originalTitle = fixOriginalTitle(originalTitle, i.Title)
+		trimedTitle := trimTitle(originalTitle)
 
-	var lastIn dal.Story
-	lastIn.OriginalIssue.Title = ""
+		splittedTrimedTitle := splitTrimedTitle(trimedTitle)
 
-	//lastString := ""
-	for _, s := range splittedTrimedTitle {
-		/*matches, _ := regexp.MatchString("/\\d+/g", s)
-		if !matches {
-			if lastString != "" {
-				lastString = lastString + "," + s
+		var lastIn dal.Story
+		lastIn.OriginalIssue.Title = ""
+
+		for _, s := range splittedTrimedTitle {
+			issues := make([]dal.Story, 0)
+			if len(splittedTrimedTitle) > 1 {
+				issues = getIssues(strings.TrimSpace(s), nil, lastIn)
 			} else {
-				lastString = s
+				issues = getIssues(strings.TrimSpace(s), &i, lastIn)
 			}
 
-			continue
-		}
+			if len(issues) > 0 {
+				lastIn = issues[0]
+			}
 
-		if lastString != "" {
-			s = lastString + "," + s
-			lastString = x""
-		}*/
-
-		issues := make([]dal.Story, 0)
-		if len(splittedTrimedTitle) > 1 {
-			issues = getIssues(strings.TrimSpace(s), nil, lastIn)
-		} else {
-			issues = getIssues(strings.TrimSpace(s), &i, lastIn)
-		}
-
-		if len(issues) > 0 {
-			lastIn = issues[0]
-		}
-
-		for _, is := range issues {
-			i.Stories = append(i.Stories, is)
+			for _, is := range issues {
+				i.Stories = append(i.Stories, is)
+			}
 		}
 	}
 
