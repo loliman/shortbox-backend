@@ -804,7 +804,9 @@ func (i Issue) Insert(db *sql.Tx) (Issue, error) {
 			return itoadd, err
 		}
 
-		itoadd.Lists = append(itoadd.Lists, i.Lists[0])
+		if len(i.Lists) > 0 {
+			itoadd.Lists = append(itoadd.Lists, i.Lists[0])
+		}
 
 		return itoadd.Update(db)
 	}
