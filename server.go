@@ -9,12 +9,12 @@ import (
 	"net/http"
 	"strconv"
 	"github.com/loliman/shortbox-backend/crawler"
-	"github.com/loliman/shortbox-backend/conf"
 	"github.com/gorilla/websocket"
 	"fmt"
 	"io"
 	"github.com/StefanSchroeder/Golang-Roman"
 	"errors"
+	"os"
 )
 
 type Request struct {
@@ -35,12 +35,12 @@ func main() {
 
 	defer db.Close()
 
-	log.Fatal(http.ListenAndServeTLS(":3000", conf.PATH_TO_CERT, conf.PATH_TO_KEY, createMux(db)))
+	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), createMux(db)))
 }
 
 //Connect to the Database
 func setupDb() *sql.DB {
-	db, err := sql.Open("mysql", conf.DATASOURCE)
+	db, err := sql.Open("mysql", os.Getenv("DB_URL"))
 
 	if err != nil {
 		log.Fatal("Failed to connect to database")
