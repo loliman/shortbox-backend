@@ -18,6 +18,6 @@ shortbox.de
 4. Open EB Console, go to Configuration/Software and add DB_URL env var (user:pw@tcp(url:port)/schema)
 (5. Grant DB Inbound from everywhere)
 
-##Usage
+## Usage
 1. Run ./build to build shortbox-backend locally
 2. Run ./deploy to deploy shortbox-backend to your eb
