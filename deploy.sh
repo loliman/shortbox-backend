@@ -1,1 +1,1 @@
-eb deploy --staged
+eb deploy

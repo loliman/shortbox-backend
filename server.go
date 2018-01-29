@@ -35,7 +35,12 @@ func main() {
 
 	defer db.Close()
 
-	log.Fatal(http.ListenAndServe(":" + os.Getenv("PORT"), createMux(db)))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
+
+	log.Fatal(http.ListenAndServe(":" + port, createMux(db)))
 }
 
 //Connect to the Database
