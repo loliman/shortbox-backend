@@ -1,8 +1,7 @@
-#!/bin/bash
 echo '-------------------------------'
 echo ' Deploying shortbox-backend... '
 echo '-------------------------------'
 
-eb deploy
+call eb deploy
 
 echo 'Deployment done!'
