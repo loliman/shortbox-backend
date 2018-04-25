@@ -1,0 +1,3023 @@
+{
+  "info": {
+    "_postman_id": "583c6f53-4c99-4581-ae02-ccbced9bb0ef",
+    "name": "shortbox-test",
+    "description": "Test the shortbox WS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Good Case",
+      "description": "",
+      "item": [
+        {
+          "name": "User Management",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "0da39ac0-720c-4330-a9d7-5277440a8ca7",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 201\"] = responseCode.code === 201;",
+                          "tests[\"Received a valid token\"] = !(responseBody.length === 0 || responseBody.trim() === \"\");",
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ff039daa-6f35-470f-b180-8c1b0e400978",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 204\"] = responseCode.code === 204;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Forgot Password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "164cdeba-b0c8-46db-a458-feb6dfb08bb7",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 200\"] = responseCode.code === 200;",
+                          "tests[\"received token\"] = !(responseBody.length === 0 || responseBody.trim() === \"\");",
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/forgotPassword?mail=christian.riese@googlemail.com",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "forgotPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reset Password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "30e1e84d-29c3-4aaa-b7ee-1abfdbbe38d6",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 204\"] = responseCode.code === 204;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/resetPassword?newPassword=xxx&token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "resetPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "newPassword",
+                          "value": "xxx"
+                        },
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "4983df8d-c5d6-40ce-be9e-3816f47e8e82",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=xxx&keep=true",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "xxx"
+                        },
+                        {
+                          "key": "keep",
+                          "value": "true"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Change Password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "6c42c8b3-e9d3-4588-9436-b754e7c4ca90",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 204\"] = responseCode.code === 204;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/changePassword?oldPassword=xxx&newPassword=abc",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "changePassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "oldPassword",
+                          "value": "xxx"
+                        },
+                        {
+                          "key": "newPassword",
+                          "value": "abc"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get User Information",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "cc53fa11-3038-4c37-b3b1-0031d32878be",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 200\"] = responseCode.code === 200;",
+                          "var user = JSON.parse(responseBody);",
+                          "",
+                          "var test = {",
+                          "    \"mail\": \"christian.riese@googlemail.com\",",
+                          "    \"registered\": 0,",
+                          "    \"usergroup\": \"USER\"",
+                          "}",
+                          "",
+                          "user.registered = 0;",
+                          "",
+                          "tests[\"User is correct\"] = (user.mail === test.mail &&",
+                          "                            user.registered === test.registered &&",
+                          "                            user.usergroup === test.usergroup);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User after one minute",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "f80be831-fe52-40fa-a8b1-9d0f6f4047dd",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 204\"] = responseCode.code === 204;"
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "b56f8ca7-71f1-4f65-a5f4-de201fbce91b",
+                        "type": "text/javascript",
+                        "exec": [
+                          "setTimeout(function () {}, 61000);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=abc",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "abc"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "379fb6fc-f436-4d15-8050-472851487661",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "7542e2eb-cb8d-4a65-b534-4fbabb58caa4",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Authentication",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "19c3db4c-8601-40ce-a4f9-dbc7ab667ee3",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ef289fad-6f2f-4a12-9a12-0338abdf75f8",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "965de037-9fae-4d2a-9884-531006fe4ef4",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 201\"] = responseCode.code === 201;",
+                          "tests[\"Received a valid token\"] = !(responseBody.length === 0 || responseBody.trim() === \"\");",
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Logout",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "2a8a6278-00e1-4146-be5d-b92f39f718e2",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Status 204\"] = responseCode.code === 204;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "c4aa082a-c8f4-48cc-835b-3d3d7fb8403e",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "e824c343-1206-43ef-bb1d-1cb2a85090fc",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "379fb6fc-f436-4d15-8050-472851487661",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "7542e2eb-cb8d-4a65-b534-4fbabb58caa4",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "71330ac9-db85-4c45-8d10-c5ebac620306",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "a0286214-50a2-4013-bd63-09bdb2274727",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bad Request",
+      "description": "",
+      "item": [
+        {
+          "name": "User Management",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "caa52f73-4bef-4615-996d-22183b15e1c6",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "1c347c2a-4de2-4faa-bc40-eed71efd5698",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Forgot Password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ebb89de5-9ee6-4f23-988e-b894e858b46a",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/forgotPassword?mail=christian.riese@googlemail.com",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "forgotPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register w/o mail",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "8b60c683-7128-443c-9611-af2bf28b033d",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Register w/o password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ac42c3e9-ed8c-464b-83ae-64742ac25523",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Register w/ invalid mail",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "9d555a16-fbaf-4eac-92d5-d51b6b68778d",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 9\"] = JSON.parse(responseBody).code === 9;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riesegooglemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riesegooglemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration w/o token",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "e139bfac-8869-4f9f-8973-b180382cae24",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Forgot Password w/o mail",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "5d80323b-fa45-4b47-869d-19f2a31a18b8",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/forgotPassword",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "forgotPassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reset Password w/o token",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "085b2893-90d6-4c0c-8d23-aa18f0b20994",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/resetPassword?newPassword=xxx",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "resetPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "newPassword",
+                          "value": "xxx"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reset Password w/o password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "4bd9e7e3-9a55-4ddf-b0fb-904569f12037",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/resetPassword?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "resetPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reset Password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ca9bf049-d83b-4666-83a0-3d4e3acd246d",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/resetPassword?newPassword=xxx&token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "resetPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "newPassword",
+                          "value": "xxx"
+                        },
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "528225a5-6649-4f9a-8f7c-2b0d744bcc98",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=xxx",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "xxx"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Change Password w/o old",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "290dade7-28e1-47d0-9a3f-6fa1534d6db0",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/changePassword?newPassword=abc",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "changePassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "newPassword",
+                          "value": "abc"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Change Password w/o new",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "61909012-0e72-4199-bec8-f3f6e9a75416",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/changePassword?oldPassword=xxx",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "changePassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "oldPassword",
+                          "value": "xxx"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User w/o password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "dd9f4b57-2659-4b6d-a4e4-8ae07bd0b949",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [
+                {
+                  "name": "Delete User",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "e1a24b39-4727-419b-bf38-33fe16caabe9",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=xxx",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "xxx"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "8a3504a1-0a06-4bbc-ad7b-5f707daa7469",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "0f46fb7a-08c2-4a79-8f3d-8a3bc796ab4c",
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Authentication",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "caa52f73-4bef-4615-996d-22183b15e1c6",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "1c347c2a-4de2-4faa-bc40-eed71efd5698",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Login w/o password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "5673e69a-f39f-4a30-89ed-7e0e9988c751",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login w/o mail",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "6af27929-58c7-4f0b-8791-aa5553ce8b86",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 8\"] = JSON.parse(responseBody).code === 8;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?password=xxx",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "xxx"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login w/ invalid mail",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "70bd8733-1feb-4e5e-aa86-805b3a0a4b09",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 9\"] = JSON.parse(responseBody).code === 9;",
+                          "tests[\"Received Status 400\"] = responseCode.code === 400;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riesegooglemail.com&password=xxx",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riesegooglemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "xxx"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ada2d2c9-be24-46ef-adb0-3b8809bd7917",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "e1a24b39-4727-419b-bf38-33fe16caabe9",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    },
+    {
+      "name": "Conflict",
+      "description": "",
+      "item": [
+        {
+          "name": "User Management",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "caa52f73-4bef-4615-996d-22183b15e1c6",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Second Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "284c7758-5bab-4b80-924b-7e0908fa5064",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 10\"] = JSON.parse(responseBody).code === 10;",
+                          "tests[\"Received Status 409\"] = responseCode.code === 409;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Forgot Password in wrong state",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "5d610c65-e714-4342-a188-b66fb637652c",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 5\"] = JSON.parse(responseBody).code === 5;",
+                          "tests[\"Received Status 409\"] = responseCode.code === 409;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/forgotPassword?mail=christian.riese@googlemail.com",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "forgotPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "1c347c2a-4de2-4faa-bc40-eed71efd5698",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ada2d2c9-be24-46ef-adb0-3b8809bd7917",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "e1a24b39-4727-419b-bf38-33fe16caabe9",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Authentication",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "caa52f73-4bef-4615-996d-22183b15e1c6",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "1c347c2a-4de2-4faa-bc40-eed71efd5698",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ada2d2c9-be24-46ef-adb0-3b8809bd7917",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Second Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "aea28af6-9b32-4861-83ad-0db3578e4815",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 4\"] = JSON.parse(responseBody).code === 4;",
+                          "tests[\"Received Status 409\"] = responseCode.code === 409;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [
+                {
+                  "name": "Delete User",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "e1a24b39-4727-419b-bf38-33fe16caabe9",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    },
+    {
+      "name": "Forbidden",
+      "description": "",
+      "item": [
+        {
+          "name": "User Management",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "caa52f73-4bef-4615-996d-22183b15e1c6",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "1c347c2a-4de2-4faa-bc40-eed71efd5698",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "528225a5-6649-4f9a-8f7c-2b0d744bcc98",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Change Password w/ wrong old",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "3d8aa755-85ad-42bd-a2e2-97349c086d58",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 7\"] = JSON.parse(responseBody).code === 7;",
+                          "tests[\"Received Status 403\"] = responseCode.code === 403;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/changePassword?oldPassword=xxx&newPassword=abc",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "changePassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "oldPassword",
+                          "value": "xxx"
+                        },
+                        {
+                          "key": "newPassword",
+                          "value": "abc"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User w/ wrong password",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "093bcda7-2c20-4e1b-b642-cd8aa6d6b707",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 7\"] = JSON.parse(responseBody).code === 7;",
+                          "tests[\"Received Status 403\"] = responseCode.code === 403;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=xxx",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "xxx"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [
+                {
+                  "name": "Delete User",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "e1a24b39-4727-419b-bf38-33fe16caabe9",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Authentication",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [
+                {
+                  "name": "Register",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "caa52f73-4bef-4615-996d-22183b15e1c6",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Login w/o Active",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "8293f93e-2a1b-4ce0-afc6-ddd13e8a58c8",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 5\"] = JSON.parse(responseBody).code === 5;",
+                          "tests[\"Received Status 403\"] = responseCode.code === 403;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Finish Registration",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "1c347c2a-4de2-4faa-bc40-eed71efd5698",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token={{token}}",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ada2d2c9-be24-46ef-adb0-3b8809bd7917",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User after one minute",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "bc347ac7-99eb-4d35-bedb-eaa110c59c15",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 1\"] = JSON.parse(responseBody).code === 1;",
+                          "tests[\"Received Status 403\"] = responseCode.code === 403;"
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "240bb7bb-cae3-4b1d-95a2-8ae6cbb65e21",
+                        "type": "text/javascript",
+                        "exec": [
+                          "setTimeout(function () {}, 61000);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [
+                {
+                  "name": "Login",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "ada2d2c9-be24-46ef-adb0-3b8809bd7917",
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.environment.set(\"token\", responseBody);"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete User",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "104cc305-cc49-45e5-b82b-c8814df90a96",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "id": "739047cc-878b-4ecf-9b93-3a7876faf0b6",
+                        "type": "text/javascript",
+                        "exec": [
+                          ""
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    },
+    {
+      "name": "Not Found",
+      "description": "",
+      "item": [
+        {
+          "name": "User Management",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Finish Registration for unkown token",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "8d881565-80a6-46ae-9075-a02903297560",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 3\"] = JSON.parse(responseBody).code === 3;",
+                          "tests[\"Received Status 404\"] = responseCode.code === 404;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/finishRegistration?token=abc",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "finishRegistration"
+                      ],
+                      "query": [
+                        {
+                          "key": "token",
+                          "value": "abc"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Forgot Password for unkown user",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "5d5c673d-7a19-4d97-b61a-ea8825767bd2",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 3\"] = JSON.parse(responseBody).code === 3;",
+                          "tests[\"Received Status 404\"] = responseCode.code === 404;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user/forgotPassword?mail=christian.riese@yahoo.com",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user",
+                        "forgotPassword"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@yahoo.com"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Authentication",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Delete User w/ unkown session",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "98136aed-0385-4331-bf4e-c6833a5d174c",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 2\"] = JSON.parse(responseBody).code === 2;",
+                          "tests[\"Received Status 404\"] = responseCode.code === 404;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "asdf",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/user?password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "user"
+                      ],
+                      "query": [
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    },
+    {
+      "name": "Unauthorized",
+      "description": "",
+      "item": [
+        {
+          "name": "User Management",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Authentication",
+          "description": "",
+          "item": [
+            {
+              "name": "Prepare",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Test",
+              "description": "",
+              "item": [
+                {
+                  "name": "Login w/ unkown user",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "id": "3214cd2c-ea8b-4a98-bb99-c7391c7a3bc4",
+                        "type": "text/javascript",
+                        "exec": [
+                          "tests[\"Received Errocode 3\"] = JSON.parse(responseBody).code === 3;",
+                          "tests[\"Received Status 401\"] = responseCode.code === 401;"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {},
+                    "url": {
+                      "raw": "{{url}}/auth?mail=christian.riese@googlemail.com&password=aaa",
+                      "host": [
+                        "{{url}}"
+                      ],
+                      "path": [
+                        "auth"
+                      ],
+                      "query": [
+                        {
+                          "key": "mail",
+                          "value": "christian.riese@googlemail.com"
+                        },
+                        {
+                          "key": "password",
+                          "value": "aaa"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "Cleanup",
+              "description": "",
+              "item": [],
+              "_postman_isSubFolder": true
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "de461d27-c267-43f6-b66f-031f6cea56ad",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "9d04d24e-f8b8-4c21-b0a5-716a68074cea",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

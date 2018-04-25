@@ -1,0 +1,12 @@
+swarm:
+  datasources:
+    data-sources:
+      shortbox:
+        driver-name: com.mysql
+        connection-url: jdbc:mysql://localhost:3306/shortbox
+        user-name: admin
+        password: admin
+    jdbc-drivers:
+      com.mysql:
+        driver-class-name: com.mysql.jdbc.Driver
+        driver-module-name: com.mysql

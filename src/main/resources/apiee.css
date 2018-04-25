@@ -1,0 +1,55 @@
+body {
+    background-image: none;
+}
+
+#footer {
+    padding-top: 10px;
+    font-size: 10px;
+}
+
+.info {
+    padding: 10px;
+    background-color: #F6F6F6;
+    border: 1px solid #DADFE1;
+}
+
+.toogleEndpointList {
+    color: darkgrey;
+}
+
+.options li {
+    color: darkgrey;
+}
+
+#api_selector .input a {
+    color: #565656;
+    background-color: #F6F6F6;
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 6px 8px;
+    font-size: 0.9em;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border: 1px solid #DADFE1;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+
+.swagger-section #explore, .swagger-section #auth_container .authorize__btn {
+    background-color: #F6F6F6;
+    border: 1px solid #DADFE1;
+    border-radius: 2px;
+    color: #565656;
+}
+
+.swagger-section #explore, .swagger-section #auth_container .authorize__btn:hover {
+    background-color: #F6F6F6;
+    border: 1px solid #DADFE1;
+    border-radius: 2px;
+    color: #565656;
+}
+
+.footer {
+    padding-top: 50px;
+}

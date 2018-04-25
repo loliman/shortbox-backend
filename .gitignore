@@ -1,7 +1,4 @@
 .idea
-server
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/config.yml
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yebextensionsml
+target
+audit.log
+shortbox-backend-jee.iml
