@@ -20,4 +20,11 @@ public interface Errors {
     Error INVALID_PARAMETERS = new Error(8, "Invalid request. Check provided parameters.");
     Error INVALID_MAIL = new Error(9, "Invalid mail. Check provided parameters.");
     Error USER_ALREADY_EXISTS = new Error(10, "User already exists.");
+    Error LIST_NOT_FOUND = new Error(11, "List not found.");
+    Error NOT_OWN_LIST = new Error(12, "This is not your own list.");
+    Error LIST_ALREADY_EXISTS = new Error(13, "List already exists.");
+    Error ISSUE_ALREADY_ON_LIST = new Error(14, "Issue is already on this list.");
+    Error ISSUE_NOT_FOUND = new Error(15, "Issue not found.");
+    Error ISSUE_NOT_ON_LIST = new Error(16, "Issue is not on this list.");
+    Error SERIES_NOT_FOUND = new Error(17, "Series not found.");
 }

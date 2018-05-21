@@ -7,7 +7,7 @@ public interface Configuration {
     /**
      * Enables/Disables the overall testmode for shortbox.
      */
-    boolean TEST_MODE = false;
+    boolean TEST_MODE = true;
 
     /**
      * Enables/Disables the mail process for shortbox.
@@ -16,13 +16,13 @@ public interface Configuration {
     boolean DISABLE_MAIL = false;
 
     //General mail configuration
-    String MAIL_PASSWORD = "password";
-    String MAIL_USER = "user";
+    String MAIL_PASSWORD = "lkwbnwtbwbpihjke";
+    String MAIL_USER = "christian.riese";
     String MAIL_HOST = "smtp.gmail.com";
     Integer MAIL_PORT = 587;
 
     /**
-     * How long should a session be valid (in minutes)?
+     * How long should a session be valid?
      */
-    Integer SESSION_INVALID = 15;
+    Integer SESSION_INVALID = 1;
 }

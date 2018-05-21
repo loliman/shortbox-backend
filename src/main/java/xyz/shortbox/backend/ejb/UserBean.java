@@ -195,7 +195,7 @@ public class UserBean extends BaseBean {
         try {
             user = findUserByMail(mail);
         } catch (Exception e) {
-            //great, there is not user!
+            //great, there is no user!
         }
 
         if (user != null)

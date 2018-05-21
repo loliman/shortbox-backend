@@ -9,7 +9,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "List", schema = "shortbox")
 @NamedQueries({
-        @NamedQuery(name = "getListsByUser", query = "SELECT l FROM ListEntity l WHERE fkUser = :fkUser")
+        @NamedQuery(name = "getListsByUser", query = "SELECT l FROM ListEntity l WHERE fkUser = :fkUser"),
+        @NamedQuery(name = "getLastListByUser", query = "SELECT MAX(l.sort) FROM ListEntity l WHERE fkUser = :fkUser"),
+        @NamedQuery(name = "getListByNameAndUser", query = "SELECT l FROM ListEntity l WHERE fkUser = :fkUser AND name = :name")
 })
 public class ListEntity extends BaseEntity {
     private int id;

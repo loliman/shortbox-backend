@@ -4,6 +4,8 @@ import xyz.shortbox.backend.dto.*;
 import xyz.shortbox.backend.rest.service.AuthService;
 import xyz.shortbox.backend.rest.service.IssueService;
 import xyz.shortbox.backend.rest.service.UserService;
+import xyz.shortbox.backend.rest.service.filter.AuthenticationFilter;
+import xyz.shortbox.backend.rest.service.filter.AuthorizationFilter;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -12,7 +14,6 @@ import java.util.Set;
 
 @ApplicationPath("/api")
 public class ShortboxApp extends Application {
-
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
 
@@ -30,6 +31,10 @@ public class ShortboxApp extends Application {
         classes.add(IssueService.class);
         classes.add(AuthService.class);
         classes.add(UserService.class);
+
+        //Filter
+        classes.add(AuthenticationFilter.class);
+        classes.add(AuthorizationFilter.class);
 
         classes.add(com.github.phillipkruger.apiee.ApieeService.class);
         return classes;

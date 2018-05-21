@@ -4,6 +4,7 @@ import io.swagger.annotations.*;
 import org.apache.commons.validator.routines.EmailValidator;
 import xyz.shortbox.backend.dto.UserDTO;
 import xyz.shortbox.backend.ejb.UserBean;
+import xyz.shortbox.backend.ejb.entity.UserEntity;
 import xyz.shortbox.backend.error.Error;
 import xyz.shortbox.backend.error.Errors;
 import xyz.shortbox.backend.exception.BadRequestException;
@@ -60,8 +61,7 @@ public class UserService extends BaseService {
     @PUT
     @Path("/finishRegistration")
     @ApiOperation(value = "Finishes the registration process",
-            notes = "The mail has to be a valid mail",
-            response = String.class
+            notes = "The mail has to be a valid mail"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "User successfully created"),
@@ -112,8 +112,7 @@ public class UserService extends BaseService {
     @Path("/resetPassword")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Finalizes the forgot password process and resets the password",
-            notes = "The token has been sent via mail before",
-            response = String.class
+            notes = "The token has been sent via mail before"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Forgot password completed"),
@@ -140,8 +139,7 @@ public class UserService extends BaseService {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Changes the current users password",
             notes = "The old and current password have to match<br>" +
-                    "<b>The user needs to be logged in</b>",
-            response = String.class
+                    "<b>The user needs to be logged in</b>"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Forgot password completed"),
@@ -168,8 +166,7 @@ public class UserService extends BaseService {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Deletes the current user and all related data",
             notes = "This process is permanent and can not be undone<br>" +
-                    "<b>The user needs to be logged in</b>",
-            response = String.class
+                    "<b>The user needs to be logged in</b>"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "User successfully deleted"),
@@ -195,7 +192,7 @@ public class UserService extends BaseService {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Returns the information about the current user",
             notes = "<b>The user needs to be logged in</b>",
-            response = String.class
+            response = UserEntity.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "User successfully returned", response = UserDTO.class),

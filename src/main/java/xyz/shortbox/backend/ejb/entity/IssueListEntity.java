@@ -9,7 +9,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "Issue_List", schema = "shortbox")
 @NamedQueries({
-        @NamedQuery(name = "getILByList", query = "SELECT il FROM IssueListEntity il WHERE il.fkList = :fkList")
+        @NamedQuery(name = "getILByList", query = "SELECT il FROM IssueListEntity il WHERE il.fkList = :fkList"),
+        @NamedQuery(name = "getIssueListByIds", query = "SELECT il FROM IssueListEntity il WHERE il.fkIssue = :fkIssue AND il.fkList = :fkList")
 })
 public class IssueListEntity extends BaseEntity {
     private int id;
